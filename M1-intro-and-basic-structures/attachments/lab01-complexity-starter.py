@@ -60,31 +60,57 @@ POW_CALLS = 20_000    # вызовов binary_pow на один замер: ин
 
 
 def array_sum(a: list[int]) -> int:
-    """Сумма элементов массива. Ожидаемая сложность: TODO (обосновать в отчёте)."""
-    # TODO: реализовать циклом
-    raise NotImplementedError
+    total = 0
+    for value in a:
+        total += value
+    return total
 
 
 def array_max(a: list[int]) -> int:
-    """Максимум массива (массив непуст). Ожидаемая сложность: TODO."""
-    # TODO: реализовать циклом
-    raise NotImplementedError
+    """Максимум массива (массив не пуст). Ожидаемая сложность: O(n)."""
+    current_max = a[0]
+    for i in range(1, len(a)):
+        if a[i] > current_max:
+            current_max = a[i]
+    return current_max
 
 
 def count_equal_pairs(a: list[int]) -> int:
-    """Число пар (i, j), i < j, таких что a[i] == a[j]. Ожидаемая сложность: TODO."""
-    # TODO: реализовать двойным циклом
-    raise NotImplementedError
+    """Количество пар i < j, для которых a[i] == a[j]."""
+    count = 0
+    for i in range(len(a)):
+        for j in range(i + 1, len(a)):
+            if a[i] == a[j]:
+                count += 1
+    return count
 
 
 def binary_pow(x: int, n: int, mod: int | None = None) -> int:
-    """Бинарное возведение в степень, n >= 0. Ожидаемая сложность: TODO.
+    """Быстрое возведение в степень за O(log n)."""
+    if n < 0:
+        raise ValueError("n must be non-negative")
 
-    При заданном mod все умножения выполняются по модулю (результат x**n % mod).
-    """
-    # TODO: реализовать через квадрирование; при mod применять % mod после
-    # каждого умножения
-    raise NotImplementedError
+    result = 1
+    base = x
+
+    if mod is not None:
+        result %= mod
+        base %= mod
+
+    while n > 0:
+        if n & 1:
+            result *= base
+            if mod is not None:
+                result %= mod
+
+        n //= 2
+
+        if n > 0:
+            base *= base
+            if mod is not None:
+                base %= mod
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -171,6 +197,8 @@ def self_check() -> None:
 
     # TODO: добавить собственные проверки инвариантов и описать их в отчёте
     # (например: count_equal_pairs на массиве из попарно различных элементов = 0).
+    assert count_equal_pairs([1, 2, 3, 4]) == 0
+    assert count_equal_pairs([9, 9, 9, 9]) == 6
     print("self_check: OK")
 
 
